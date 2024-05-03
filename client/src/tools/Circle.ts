@@ -1,6 +1,6 @@
 import Tool from "./Tool";
 
-export default class Rect extends Tool {
+export default class Circle extends Tool {
   mouseDown: boolean = false
   startX: number = 0
   startY: number = 0
@@ -16,7 +16,7 @@ export default class Rect extends Tool {
     this.canvas.onmouseup = this.mouseUpHandler.bind(this);
   }
 
-  mouseUpHandler(e: any) {
+  mouseUpHandler() {
     this.mouseDown = false
   }
 
@@ -34,18 +34,19 @@ export default class Rect extends Tool {
       let currentY = e.pageY - e.target.offsetTop;
       let width = currentX - this.startX;
       let height = currentY - this.startY;
-      this.draw(this.startX, this.startY, width, height)
+      let r = Math.sqrt(width**2 + height**2)
+      this.draw(this.startX, this.startY, r)
     }
   }
 
-  draw(x: number, y: number, w: number, h: number) {
+  draw(x: number, y: number, r: number) {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
       this.ctx?.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx?.drawImage(img, 0, 0, this.canvas.width, this.canvas.height )
       this.ctx?.beginPath()
-      this.ctx?.rect(x,y, w, h)
+      this.ctx?.arc(x, y, r, 0, 2 * Math.PI);
       this.ctx?.fill();
       this.ctx?.stroke();
     }

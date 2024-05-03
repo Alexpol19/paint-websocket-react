@@ -1,6 +1,6 @@
 import Tool from "./Tool";
 
-export default class Line extends Tool {
+export default class Rect extends Tool {
   mouseDown: boolean = false
   startX: number = 0
   startY: number = 0
@@ -16,7 +16,7 @@ export default class Line extends Tool {
     this.canvas.onmouseup = this.mouseUpHandler.bind(this);
   }
 
-  mouseUpHandler(e: any) {
+  mouseUpHandler() {
     this.mouseDown = false
   }
 
@@ -25,7 +25,6 @@ export default class Line extends Tool {
     this.ctx?.beginPath()
     this.startX = e.pageX - e.target.offsetLeft;
     this.startY = e.pageY - e.target.offsetTop;
-    this.ctx?.moveTo(this.startX, this.startY)
     this.saved = this.canvas.toDataURL()
   }
 
@@ -33,22 +32,22 @@ export default class Line extends Tool {
     if(this.mouseDown) {
       let currentX = e.pageX - e.target.offsetLeft;
       let currentY = e.pageY - e.target.offsetTop;
-      this.draw(currentX, currentY)
+      let width = currentX - this.startX;
+      let height = currentY - this.startY;
+      this.draw(this.startX, this.startY, width, height)
     }
   }
 
-  draw(x: number, y: number) {
+  draw(x: number, y: number, w: number, h: number) {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
-      if(this.ctx) {
-        this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height)
-        this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height)
-        this.ctx.beginPath()
-        this.ctx.moveTo(this.startX, this.startY )
-        this.ctx.lineTo(x, y)
-        this.ctx.stroke()
-      }
+      this.ctx?.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.ctx?.drawImage(img, 0, 0, this.canvas.width, this.canvas.height )
+      this.ctx?.beginPath()
+      this.ctx?.rect(x,y, w, h)
+      this.ctx?.fill();
+      this.ctx?.stroke();
     }
   }
 }
