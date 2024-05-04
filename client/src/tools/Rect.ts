@@ -24,12 +24,12 @@ export default class Rect extends Tool {
       method: 'draw',
       id: this.id,
       figure: {
-          type: 'rect',
-          x: this.startX,
-          y: this.startY,
-          width: this.width,
-          height: this.height,
-          color: this.ctx?.fillStyle
+        type: 'rect',
+        x: this.startX,
+        y: this.startY,
+        width: this.width,
+        height: this.height,
+        color: this.ctx?.fillStyle
       }
     }))
   }

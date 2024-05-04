@@ -36,15 +36,15 @@ const Canvas = observer(() => {
       const ctx = canvasRef.current.getContext('2d')
       if(!ctx) return null
       switch (figure.type) {
-          case "brush":
-              Brush.draw(ctx, figure.x, figure.y)
-              break
-          case "rect":
-              Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.color)
-              break
-          case "finish":
-            ctx.beginPath()
-            break
+        case "brush":
+          Brush.draw(ctx, figure.x, figure.y)
+          break
+        case "rect":
+          Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.color)
+          break
+        case "finish":
+          ctx.beginPath()
+          break
       }
     }
   }
@@ -60,14 +60,14 @@ const Canvas = observer(() => {
             img.src = response.data
             img.onload = () => {
               if(canvasRef.current) {
-                  ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-                  ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height)
-                }
+                ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+                ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height)
               }
-            })
+            }
+          })
       }
     }
-}, [])
+  }, [])
 
   useEffect(() => {
     if(canvasState.userName && canvasRef.current) {
@@ -98,6 +98,7 @@ const Canvas = observer(() => {
       }
     }
   }, [canvasState.userName])
+
   return (
     <div  className="canvas">
       <Modal show={modal} onHide={() => {}}>

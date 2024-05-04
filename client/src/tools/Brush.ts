@@ -19,7 +19,7 @@ export default class Brush extends Tool {
       method: 'draw',
       id: this.id,
       figure: {
-          type: 'finish',
+        type: 'finish',
       }
     }))
   }
@@ -32,14 +32,13 @@ export default class Brush extends Tool {
 
   mouseMoveHandler(e: any) {
     if(this.mouseDown) {
-      // this.draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
       this.socket.send(JSON.stringify({
         method: 'draw',
         id: this.id,
         figure: {
-            type: 'brush',
-            x: e.pageX - e.target.offsetLeft,
-            y: e.pageY - e.target.offsetTop
+          type: 'brush',
+          x: e.pageX - e.target.offsetLeft,
+          y: e.pageY - e.target.offsetTop
         }
       }))
     }
@@ -48,5 +47,5 @@ export default class Brush extends Tool {
   static draw(ctx: CanvasRenderingContext2D, x: number, y: number) {
     ctx.lineTo(x, y)
     ctx.stroke()
-}
+  }
 }

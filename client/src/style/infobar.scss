@@ -1,0 +1,13 @@
+@import "./variables";
+
+.info-bar {
+  top: calc($toolbar-height*2);
+  margin-top: 5px;
+  position: absolute;
+  right: 0;
+  width: 300px;
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 4px 5px gray;
+  border-radius: 6px;
+}

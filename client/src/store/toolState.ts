@@ -25,8 +25,6 @@ class ToolState {
   setLineWidth(width: number) {
     this.tool.lineWidth = width
   }
-  
 }
-
 
 export default new ToolState

@@ -3,27 +3,25 @@ import Canvas from "./components/Canvas"
 import SettingBar from "./components/SettingBar"
 import Toolbar from "./components/Toolbar"
 import "./style/app.scss"
+import InfoBar from "./components/InfoBar"
 
-function App() {
-
-  return (
-    <BrowserRouter>
-
-      <Routes>
-        <Route path="/:id" element={
-          <div className='app'>
-          <Toolbar />
-          <SettingBar />
-          <Canvas />
-        </div>
-        } />
-        <Route
-          path="*"
-          element={<Navigate to={`f${(+new Date).toString(16)}`} replace />}
-        />
-      </Routes>
-    </BrowserRouter>
-  )
-}
+const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/:id" element={
+        <div className='app'>
+        <Toolbar />
+        <SettingBar />
+        <Canvas />
+        <InfoBar />
+      </div>
+      } />
+      <Route
+        path="*"
+        element={<Navigate to={`f${(+new Date).toString(16)}`} replace />}
+      />
+    </Routes>
+  </BrowserRouter>
+)
 
 export default App
