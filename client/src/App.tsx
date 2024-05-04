@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Canvas from "./components/Canvas"
 import SettingBar from "./components/SettingBar"
 import Toolbar from "./components/Toolbar"
@@ -6,11 +7,22 @@ import "./style/app.scss"
 function App() {
 
   return (
-    <div className='app'>
-      <Toolbar />
-      <SettingBar />
-      <Canvas />
-    </div>
+    <BrowserRouter>
+
+      <Routes>
+        <Route path="/:id" element={
+          <div className='app'>
+          <Toolbar />
+          <SettingBar />
+          <Canvas />
+        </div>
+        } />
+        <Route
+          path="*"
+          element={<Navigate to={`f${(+new Date).toString(16)}`} replace />}
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -1,13 +1,23 @@
 import { makeAutoObservable } from "mobx";
 
 class CanvasState {
+  socket!: WebSocket
+  sessionid: string = ''
   canvas!: HTMLCanvasElement
   undoList: string[] = []
   redoList: string[] = []
+  userName: string = ''
 
 
   constructor() {
     makeAutoObservable(this)
+  }
+
+  setSessionId(id: string) {
+    this.sessionid = id
+  }
+  setSocket(socket: WebSocket) {
+    this.socket = socket
   }
 
   setCanvas(canvas: HTMLCanvasElement) {
@@ -56,6 +66,10 @@ class CanvasState {
         }
       }
     }
+  }
+
+  setUsername(name: string) {
+    this.userName = name;
   }
 }
 

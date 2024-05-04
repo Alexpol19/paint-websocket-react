@@ -2,8 +2,8 @@ import Brush from "./Brush";
 
 export default class Eraser extends Brush {
   mouseDown: boolean = false
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(canvas: HTMLCanvasElement, socket: WebSocket, id: string) {
+    super(canvas, socket, id);
   }
 
   draw(x: number, y: number) {
