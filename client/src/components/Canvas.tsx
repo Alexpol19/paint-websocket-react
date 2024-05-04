@@ -8,6 +8,7 @@ import { Button, Modal } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import Rect from "../tools/Rect"
 import axios from "axios"
+import Eraser from "../tools/Eraser"
 
 const Canvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -38,6 +39,9 @@ const Canvas = observer(() => {
       switch (figure.type) {
         case "brush":
           Brush.draw(ctx, figure.x, figure.y)
+          break
+        case "eraser":
+          Eraser.draw(ctx, figure.x, figure.y)
           break
         case "rect":
           Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.color)
