@@ -1,3 +1,4 @@
+import { socketSendDrawWith, socketSendDrawWithFinish } from "../actions/socket";
 import Tool from "./Tool";
 
 export default class Eraser extends Tool {
@@ -15,13 +16,7 @@ export default class Eraser extends Tool {
   
   mouseUpHandler() {
     this.mouseDown = false
-    this.socket.send(JSON.stringify({
-      method: 'draw',
-      id: this.id,
-      figure: {
-        type: 'finish',
-      }
-    }))
+    socketSendDrawWithFinish(this.socket, this.id)
   }
 
   mouseDownHandler(e: any) {
@@ -32,19 +27,22 @@ export default class Eraser extends Tool {
 
   mouseMoveHandler(e: any) {
     if(this.mouseDown) {
-      this.socket.send(JSON.stringify({
-        method: 'draw',
-        id: this.id,
-        figure: {
-          type: 'eraser',
-          x: e.pageX - e.target.offsetLeft,
-          y: e.pageY - e.target.offsetTop
-        }
-      }))
+      const figure = {
+        type: 'eraser',
+        x: e.pageX - e.target.offsetLeft,
+        y: e.pageY - e.target.offsetTop
+      };
+  
+      socketSendDrawWith(
+        this.socket,
+        this.ctx,
+        figure,
+        this.id,
+      )
     }
   }
 
-  static draw(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  static staticDraw(ctx: CanvasRenderingContext2D, x: number, y: number) {
     ctx.strokeStyle = 'white'
     ctx.lineTo(x, y)
     ctx.stroke()

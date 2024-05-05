@@ -1,3 +1,4 @@
+import { socketSendDrawWith } from "../actions/socket";
 import Tool from "./Tool";
 
 export default class Line extends Tool {
@@ -20,18 +21,20 @@ export default class Line extends Tool {
 
   mouseUpHandler() {
     this.mouseDown = false
-    this.socket.send(JSON.stringify({
-      method: 'draw',
-      id: this.id,
-      figure: {
-        type: 'line',
-        startX: this.startX,
-        endX: this.endX,
-        startY: this.startY,
-        endY: this.endY,
-        color: this.ctx?.strokeStyle
-      }
-    }))
+    const figure = {
+      type: 'line',
+      startX: this.startX,
+      endX: this.endX,
+      startY: this.startY,
+      endY: this.endY,
+    };
+
+    socketSendDrawWith(
+      this.socket,
+      this.ctx,
+      figure,
+      this.id,
+    )
   }
 
   mouseDownHandler(e: any) {
@@ -66,8 +69,8 @@ export default class Line extends Tool {
     }
   }
 
-  static staticDraw(ctx: CanvasRenderingContext2D, startX: number, endX: number, startY: number, endY: number, color: string) {
-    ctx.strokeStyle = color;
+  static staticDraw(ctx: CanvasRenderingContext2D, startX: number, endX: number, startY: number, endY: number, strokeColor: string) {
+    ctx.strokeStyle = strokeColor;
     ctx.beginPath()
     ctx.moveTo(startX, startY)
     ctx.lineTo(endX, endY)

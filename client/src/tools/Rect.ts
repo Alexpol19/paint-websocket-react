@@ -1,3 +1,4 @@
+import { socketSendDrawWith } from "../actions/socket";
 import Tool from "./Tool";
 
 export default class Rect extends Tool {
@@ -20,18 +21,20 @@ export default class Rect extends Tool {
 
   mouseUpHandler() {
     this.mouseDown = false
-    this.socket.send(JSON.stringify({
-      method: 'draw',
-      id: this.id,
-      figure: {
-        type: 'rect',
-        x: this.startX,
-        y: this.startY,
-        width: this.width,
-        height: this.height,
-        color: this.ctx?.fillStyle
-      }
-    }))
+    const figure = {
+      type: 'rect',
+      x: this.startX,
+      y: this.startY,
+      width: this.width,
+      height: this.height,
+    };
+
+    socketSendDrawWith(
+      this.socket,
+      this.ctx,
+      figure,
+      this.id,
+    )
   }
 
   mouseDownHandler(e: any) {
@@ -65,9 +68,10 @@ export default class Rect extends Tool {
     }
   }
 
-  static staticDraw(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string) {
-    ctx.fillStyle = color
+  static staticDraw(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, strokeColor: string, fillColor: string) {
     ctx.beginPath()
+    ctx.strokeStyle = strokeColor
+    ctx.fillStyle = fillColor
     ctx.rect(x, y, w, h)
     ctx.fill()
     ctx.stroke()

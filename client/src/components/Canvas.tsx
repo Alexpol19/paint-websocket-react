@@ -7,10 +7,11 @@ import Brush from "../tools/Brush"
 import { Button, Modal } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import Rect from "../tools/Rect"
-import axios from "axios"
 import Eraser from "../tools/Eraser"
 import Circle from "../tools/Circle"
 import Line from "../tools/Line"
+import { socketOnMessage, socketOpenWithSendConnection } from "../actions/socket"
+import { getImage, sendImage } from "../actions/api"
 
 const Canvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -21,8 +22,8 @@ const Canvas = observer(() => {
   const mouseUpHandler = () => {
     if(canvasRef.current) {
       canvasState.pushToUndo(canvasRef.current?.toDataURL())
-      axios.post(`http://localhost:3000/image?id=${params.id}`, {img: canvasRef.current.toDataURL()})
-        .then(response => console.log(response.data))
+      if(!params.id) return null;
+      sendImage(canvasRef.current, params.id)
     }
   }
 
@@ -38,21 +39,27 @@ const Canvas = observer(() => {
     if(canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d')
       if(!ctx) return null
+      if(figure.lineWidth) {
+        ctx.lineWidth = figure.lineWidth
+      }
       switch (figure.type) {
         case "brush":
-          Brush.draw(ctx, figure.x, figure.y)
+          Brush.staticDraw(ctx, figure.x, figure.y, figure.strokeColor)
           break
         case "eraser":
-          Eraser.draw(ctx, figure.x, figure.y)
-          break
-        case "rect":
-          Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.color)
-          break
-        case "circle":
-          Circle.staticDraw(ctx, figure.x, figure.y, figure.r, figure.color)
+          Eraser.staticDraw(ctx, figure.x, figure.y)
           break
         case "line":
-          Line.staticDraw(ctx, figure.startX, figure.endX, figure.startY, figure.endY, figure.color)
+          Line.staticDraw(ctx, figure.startX, figure.endX, figure.startY, figure.endY, figure.strokeColor)
+          ctx.beginPath()
+          break
+        case "rect":
+          Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeColor, figure.fillColor)
+          ctx.beginPath()
+          break
+        case "circle":
+          Circle.staticDraw(ctx, figure.x, figure.y, figure.r, figure.strokeColor, figure.fillColor)
+          ctx.beginPath()
           break
         case "finish":
           ctx.beginPath()
@@ -65,9 +72,9 @@ const Canvas = observer(() => {
     if(canvasRef.current) {
       canvasState.setCanvas(canvasRef.current)
       let ctx = canvasRef.current.getContext('2d')
-      if(ctx) {
-        axios.get(`http://localhost:3000/image?id=${params.id}`)
-          .then(response => {
+      if(ctx && params.id) {
+        getImage(params.id)
+          .then(response =>{
             const img = new Image()
             img.src = response.data
             img.onload = () => {
@@ -82,32 +89,19 @@ const Canvas = observer(() => {
   }, [])
 
   useEffect(() => {
-    if(canvasState.userName && canvasRef.current) {
+    if(canvasState.userName && canvasRef.current && params.id) {
       const socket = new WebSocket('ws://localhost:3000/')
       
       canvasState.setCanvas(canvasRef.current)
-      toolState.setTool(new Brush(canvasRef.current, socket, params.id || ''))
+      toolState.setTool(new Brush(canvasRef.current, socket, params.id))
+      toolState.setFillColor('#000')
+      toolState.setStrokeColor('#000')
+      toolState.setLineWidth(1)
       canvasState.setSocket(socket)
-      canvasState.setSessionId(params.id || '')
-      socket.onopen = () => {
-        socket.send(JSON.stringify({
-          id: params.id,
-          username: canvasState.userName,
-          method: "connection"
-        }))
-      }
+      canvasState.setSessionId(params.id)
 
-      socket.onmessage = (e: MessageEvent) => {
-        let msg: {[key in string]: any} = JSON.parse(e.data)
-        switch (msg.method) {
-          case "connection":
-            console.log(`User ${msg.username} is connected`)
-            break
-          case "draw":
-            drawHandler(msg)
-            break
-        }
-      }
+      socketOpenWithSendConnection(socket, params.id, canvasState.userName)
+      socketOnMessage(socket, drawHandler)
     }
   }, [canvasState.userName])
 

@@ -1,3 +1,4 @@
+import { socketSendDrawWith } from "../actions/socket";
 import Tool from "./Tool";
 
 export default class Circle extends Tool {
@@ -19,17 +20,19 @@ export default class Circle extends Tool {
 
   mouseUpHandler() {
     this.mouseDown = false
-    this.socket.send(JSON.stringify({
-      method: 'draw',
-      id: this.id,
-      figure: {
-        type: 'circle',
-        x: this.startX,
-        y: this.startY,
-        r: this.radius,
-        color: this.ctx?.fillStyle
-      }
-    }))
+    const figure = {
+      type: 'circle',
+      x: this.startX,
+      y: this.startY,
+      r: this.radius,
+    };
+
+    socketSendDrawWith(
+      this.socket,
+      this.ctx,
+      figure,
+      this.id,
+    )
   }
 
   mouseDownHandler(e: any) {
@@ -64,9 +67,10 @@ export default class Circle extends Tool {
     }
   }
 
-  static staticDraw(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string) {
-    ctx.fillStyle = color
+  static staticDraw(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, strokeColor: string, fillColor: string) {
     ctx.beginPath()
+    ctx.strokeStyle = strokeColor
+    ctx.fillStyle = fillColor
     ctx.arc(x, y, r, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
