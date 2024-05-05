@@ -34,6 +34,13 @@ app.ws('/', (ws, req) => {
 app.post('/image', (req, res) => {
   try {
     const data = req.body.img.replace(`data:image/png;base64,`, '')
+
+    const filesFolderPath = path.resolve(__dirname, '../files');
+
+    if (!fs.existsSync(filesFolderPath)) {// ensure files folder exist
+      fs.mkdirSync(filesFolderPath);
+    }
+
     fs.writeFileSync(path.resolve(__dirname, '../files', `${req.query.id}.jpg`), data, 'base64')
     return res.status(200).json({message: "Loaded"})
   } catch (e) {
@@ -41,6 +48,7 @@ app.post('/image', (req, res) => {
     return res.status(500).json('error')
   }
 })
+
 app.get('/image', (req, res) => {
   try {
     const file = fs.readFileSync(path.resolve(__dirname, '../files', `${req.query.id}.jpg`))
