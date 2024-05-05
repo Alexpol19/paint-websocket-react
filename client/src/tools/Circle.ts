@@ -30,7 +30,6 @@ export default class Circle extends Tool {
 
     socketSendDrawWith(
       this.socket,
-      this.ctx,
       figure,
       this.id,
     )

@@ -31,7 +31,6 @@ export default class Line extends Tool {
 
     socketSendDrawWith(
       this.socket,
-      this.ctx,
       figure,
       this.id,
     )

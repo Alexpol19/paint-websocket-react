@@ -32,7 +32,6 @@ export default class Rect extends Tool {
 
     socketSendDrawWith(
       this.socket,
-      this.ctx,
       figure,
       this.id,
     )

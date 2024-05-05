@@ -29,8 +29,7 @@ export const socketOnMessage = (
   }
 }
 
-export const socketSendDrawWith = (socket: WebSocket, ctx: CanvasRenderingContext2D | null, figure: {[key in string]: any}, id: string) => {
-  if(!ctx) return null;
+export const socketSendDrawWith = (socket: WebSocket, figure: {[key in string]: any}, id: string) => {
   socket.send(JSON.stringify({
     method: 'draw',
     id: id,
@@ -49,7 +48,6 @@ export const socketSendDrawWithFinish = (socket: WebSocket, id: string) => {
   };
   socketSendDrawWith(
     socket,
-    null,
     finishFigure,
     id
   )

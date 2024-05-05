@@ -35,7 +35,6 @@ export default class Eraser extends Tool {
   
       socketSendDrawWith(
         this.socket,
-        this.ctx,
         figure,
         this.id,
       )
