@@ -1,10 +1,9 @@
 import { observer } from "mobx-react-lite"
 import "../style/canvas.scss"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import canvasState from "../store/canvasState"
 import toolState from "../store/toolState"
 import Brush from "../tools/Brush"
-import { Button, Modal } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import Rect from "../tools/Rect"
 import Eraser from "../tools/Eraser"
@@ -12,11 +11,10 @@ import Circle from "../tools/Circle"
 import Line from "../tools/Line"
 import { socketOnMessage, socketOpenWithSendConnection } from "../actions/socket"
 import { getImage, sendImage } from "../actions/api"
+import InitialModal from "./InitialModal"
 
 const Canvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const usernameRef = useRef<HTMLInputElement | null>(null);
-  const [modal, setModal] = useState(true)
   const params = useParams()
 
   const mouseUpHandler = () => {
@@ -24,13 +22,6 @@ const Canvas = observer(() => {
       canvasState.pushToUndo(canvasRef.current?.toDataURL())
       if(!params.id) return null;
       sendImage(canvasRef.current, params.id)
-    }
-  }
-
-  const connectHandler = () => {
-    if(usernameRef.current){
-      canvasState.setUsername(usernameRef.current.value)
-      setModal(false)
     }
   }
 
@@ -107,19 +98,7 @@ const Canvas = observer(() => {
 
   return (
     <div  className="canvas">
-      <Modal show={modal} onHide={() => {}}>
-        <Modal.Header >
-          <Modal.Title>Enter your name</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <input type="text" ref={usernameRef}/>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => connectHandler()}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <InitialModal />
       <canvas
         onMouseUp={() => mouseUpHandler()}
         ref={canvasRef} width={600} height={400} />

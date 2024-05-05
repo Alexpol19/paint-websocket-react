@@ -1,3 +1,5 @@
+import toolState from "../store/toolState";
+
 export const socketOpenWithSendConnection = (socket: WebSocket, id: string, userName: string) => {
   socket.onopen = () => {
     socket.send(JSON.stringify({
@@ -34,9 +36,9 @@ export const socketSendDrawWith = (socket: WebSocket, ctx: CanvasRenderingContex
     id: id,
     figure: {
       ...figure,
-      strokeColor: ctx.strokeStyle,
-      fillColor: ctx.fillStyle,
-      lineWidth: ctx.lineWidth
+      strokeColor: toolState.strokeColor,
+      fillColor: toolState.fillColor,
+      lineWidth: toolState.lineWidth
     }
   }))
 }
