@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom"
 import Rect from "../tools/Rect"
 import axios from "axios"
 import Eraser from "../tools/Eraser"
+import Circle from "../tools/Circle"
+import Line from "../tools/Line"
 
 const Canvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -45,6 +47,12 @@ const Canvas = observer(() => {
           break
         case "rect":
           Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height, figure.color)
+          break
+        case "circle":
+          Circle.staticDraw(ctx, figure.x, figure.y, figure.r, figure.color)
+          break
+        case "line":
+          Line.staticDraw(ctx, figure.startX, figure.endX, figure.startY, figure.endY, figure.color)
           break
         case "finish":
           ctx.beginPath()
