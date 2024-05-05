@@ -1,4 +1,5 @@
 import { socketSendDrawWith } from "../actions/socket";
+import toolState from "../store/toolState";
 import Tool from "./Tool";
 
 export default class Circle extends Tool {
@@ -37,7 +38,12 @@ export default class Circle extends Tool {
 
   mouseDownHandler(e: any) {
     this.mouseDown = true
-    this.ctx?.beginPath()
+    if(this.ctx){
+      this.ctx.strokeStyle = toolState.strokeColor
+      this.ctx.fillStyle = toolState.fillColor
+      this.ctx.lineWidth = toolState.lineWidth
+      this.ctx.beginPath()
+    }
     this.startX = e.pageX - e.target.offsetLeft;
     this.startY = e.pageY - e.target.offsetTop;
     this.saved = this.canvas.toDataURL()
