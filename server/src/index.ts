@@ -60,6 +60,19 @@ app.get('/image', (req, res) => {
   }
 })
 
+app.get('/sessions', (req, res) => {
+  try {
+    const files = fs.readdirSync(path.resolve(__dirname, '../files'));
+    const jpegFileNames = files
+      .filter(file => file.endsWith('.jpg'))
+      .map(file => path.parse(file).name);
+    res.json(jpegFileNames);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json('error');
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`[server]: Server is running at http://localhost:${PORT}`);
 });

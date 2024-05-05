@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 class InfoState {
   connectedUsers: string[] = []
+  sessions: string[] = []
 
   constructor() {
     makeAutoObservable(this)
@@ -9,6 +10,10 @@ class InfoState {
 
   setConnectedUsers(users: string[]) {
     this.connectedUsers = users;
+  }
+
+  setSessions(ids: string[]) {
+    this.sessions = ids
   }
 }
 

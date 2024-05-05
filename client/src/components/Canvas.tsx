@@ -60,9 +60,12 @@ const Canvas = observer(() => {
   }
 
   useEffect(() => {
-    if(canvasRef.current) {
+    if(canvasRef.current && params.sessionId) {
+      canvasState.setSessionId(params.sessionId)
+
       canvasState.setCanvas(canvasRef.current)
       let ctx = canvasRef.current.getContext('2d')
+
       if(ctx && params.sessionId) {
         getImage(params.sessionId)
           .then(response =>{
@@ -89,7 +92,6 @@ const Canvas = observer(() => {
       toolState.setStrokeColor('#000')
       toolState.setLineWidth(1)
       canvasState.setSocket(socket)
-      canvasState.setSessionId(params.sessionId)
 
       socketOpenWithSendConnection(socket, params.sessionId, canvasState.userName)
       socketOnMessage(socket, drawHandler)

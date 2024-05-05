@@ -6,3 +6,5 @@ export const sendImage = (canvas: HTMLCanvasElement, sessionId: string) => {
 }
 
 export const getImage = (sessionId: string) => axios.get(`http://localhost:3000/image?id=${sessionId}`)
+
+export const getSessions = () => axios.get(`http://localhost:3000/sessions`)
