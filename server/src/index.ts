@@ -11,7 +11,7 @@ const aWss = WSServer.getWss()
 const PORT = process.env.PORT || 3000
 
 interface WebSocket {
-  id?: string
+  sessionId?: string
 }
 
 app.use(cors())
@@ -65,13 +65,13 @@ app.listen(PORT, () => {
 });
 
 const connectionHandler = (ws: WebSocket, msg: {[key in string]: any} ) => {
-  ws.id = msg.id
+  ws.sessionId = msg.sessionId
   broadcastConnection(ws, msg)
 }
 
 const broadcastConnection = (ws: WebSocket, msg: {[key in string]: any}) => {
   aWss.clients.forEach((client: any) => {
-    if (client.id === msg.id) {
+    if (client.sessionId === msg.sessionId) {
       client.send(JSON.stringify(msg))
     }
   })

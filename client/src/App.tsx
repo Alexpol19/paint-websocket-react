@@ -8,7 +8,7 @@ import InfoBar from "./components/InfoBar"
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/:id" element={
+      <Route path="/:sessionId" element={
         <div className='app'>
         <Toolbar />
         <SettingBar />

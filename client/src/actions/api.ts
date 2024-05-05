@@ -1,8 +1,8 @@
 import axios from "axios"
 
-export const sendImage = (canvas: HTMLCanvasElement, id: string) => {
-  axios.post(`http://localhost:3000/image?id=${id}`, {img: canvas.toDataURL()})
+export const sendImage = (canvas: HTMLCanvasElement, sessionId: string) => {
+  axios.post(`http://localhost:3000/image?id=${sessionId}`, {img: canvas.toDataURL()})
     .then(response => console.log(response.data))
 }
 
-export const getImage = (id: string) => axios.get(`http://localhost:3000/image?id=${id}`)
+export const getImage = (sessionId: string) => axios.get(`http://localhost:3000/image?id=${sessionId}`)

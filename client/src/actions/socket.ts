@@ -1,9 +1,9 @@
 import toolState from "../store/toolState";
 
-export const socketOpenWithSendConnection = (socket: WebSocket, id: string, userName: string) => {
+export const socketOpenWithSendConnection = (socket: WebSocket, sessionId: string, userName: string) => {
   socket.onopen = () => {
     socket.send(JSON.stringify({
-      id: id,
+      sessionId,
       username: userName,
       method: "connection"
     }))
@@ -29,10 +29,10 @@ export const socketOnMessage = (
   }
 }
 
-export const socketSendDrawWith = (socket: WebSocket, figure: {[key in string]: any}, id: string) => {
+export const socketSendDrawWith = (socket: WebSocket, figure: {[key in string]: any}, sessionId: string) => {
   socket.send(JSON.stringify({
     method: 'draw',
-    id: id,
+    sessionId,
     figure: {
       ...figure,
       strokeColor: toolState.strokeColor,
@@ -42,13 +42,13 @@ export const socketSendDrawWith = (socket: WebSocket, figure: {[key in string]: 
   }))
 }
 
-export const socketSendDrawWithFinish = (socket: WebSocket, id: string) => {
+export const socketSendDrawWithFinish = (socket: WebSocket, sessionId: string) => {
   const finishFigure = {
     type: 'finish',
   };
   socketSendDrawWith(
     socket,
     finishFigure,
-    id
+    sessionId
   )
 }

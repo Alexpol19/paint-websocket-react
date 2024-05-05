@@ -40,6 +40,7 @@ const InitialModal = () => {
           autoFocus
           type="text"
           onChange={handleInputChange}
+          value={value}
           onKeyDown={handleKeyDown}
           required
           className={errorMessage ? 'error' : ''}

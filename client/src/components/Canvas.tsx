@@ -20,8 +20,8 @@ const Canvas = observer(() => {
   const mouseUpHandler = () => {
     if(canvasRef.current) {
       canvasState.pushToUndo(canvasRef.current?.toDataURL())
-      if(!params.id) return null;
-      sendImage(canvasRef.current, params.id)
+      if(!params.sessionId) return null;
+      sendImage(canvasRef.current, params.sessionId)
     }
   }
 
@@ -63,8 +63,8 @@ const Canvas = observer(() => {
     if(canvasRef.current) {
       canvasState.setCanvas(canvasRef.current)
       let ctx = canvasRef.current.getContext('2d')
-      if(ctx && params.id) {
-        getImage(params.id)
+      if(ctx && params.sessionId) {
+        getImage(params.sessionId)
           .then(response =>{
             const img = new Image()
             img.src = response.data
@@ -80,18 +80,18 @@ const Canvas = observer(() => {
   }, [])
 
   useEffect(() => {
-    if(canvasState.userName && canvasRef.current && params.id) {
+    if(canvasState.userName && canvasRef.current && params.sessionId) {
       const socket = new WebSocket('ws://localhost:3000/')
       
       canvasState.setCanvas(canvasRef.current)
-      toolState.setTool(new Brush(canvasRef.current, socket, params.id))
+      toolState.setTool(new Brush(canvasRef.current, socket, params.sessionId))
       toolState.setFillColor('#000')
       toolState.setStrokeColor('#000')
       toolState.setLineWidth(1)
       canvasState.setSocket(socket)
-      canvasState.setSessionId(params.id)
+      canvasState.setSessionId(params.sessionId)
 
-      socketOpenWithSendConnection(socket, params.id, canvasState.userName)
+      socketOpenWithSendConnection(socket, params.sessionId, canvasState.userName)
       socketOnMessage(socket, drawHandler)
     }
   }, [canvasState.userName])
